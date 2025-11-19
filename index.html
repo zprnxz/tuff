@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My First GitHub Site</title>
+  <style>
+    body {margin:0;background:#0f0c29;color:white;font-family:Arial;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+    h1 {font-size:50px;text-shadow:0 0 20px #00ffcc;}
+    canvas {position:absolute;top:0;left:0;z-index:-1;}
+  </style>
+</head>
+<body>
+  <h1>Hello from GitHub! ❄️</h1>
+  <p>This website is 100% hosted on GitHub Pages</p>
+  <canvas id="snow"></canvas>
+
+<script>
+// Simple snow
+const c = document.getElementById('snow');
+c.width = window.innerWidth; c.height = window.innerHeight;
+const ctx = c.getContext('2d');
+let snow = [];
+for(let i=0;i<200;i++){
+  snow.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*3+1,s:Math.random()*1+0.5});
+}
+function fall(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle="white";
+  snow.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    p.y += p.s;
+    if(p.y > c.height) p.y = 0;
+    p.x += Math.random()*2-1;
+  });
+  requestAnimationFrame(fall);
+}
+fall();
+</script>
+</body>
+</html>

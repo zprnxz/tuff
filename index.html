@@ -1,39 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My First GitHub Site</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>❄️ Follow Me on Roblox! ❄️</title>
   <style>
-    body {margin:0;background:#0f0c29;color:white;font-family:Arial;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;}
-    h1 {font-size:50px;text-shadow:0 0 20px #00ffcc;}
-    canvas {position:absolute;top:0;left:0;z-index:-1;}
+    body {
+      margin:0; padding:0; height:100vh; overflow:hidden;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color:white; font-family:'Segoe UI',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .card {
+      background:rgba(0,0,0,0.65); padding:40px; border-radius:25px;
+      text-align:center; max-width:500px; box-shadow:0 0 40px rgba(0,255,255,0.6);
+      backdrop-filter: blur(10px); border:2px solid rgba(0,255,255,0.3);
+    }
+    h1 { font-size:48px; margin:0; text-shadow:0 0 20px cyan; }
+    .accounts {
+      margin:25px 0; padding:15px; background:rgba(255,255,255,0.1);
+      border-radius:15px; min-height:80px;
+    }
+    .account-tag {
+      display:inline-block; background:#00ff9d; color:black;
+      padding:8px 16px; margin:5px; border-radius:50px; font-weight:bold;
+    }
+    input {
+      padding:14px; width:280px; border:none; border-radius:12px;
+      font-size:18px; margin:10px; text-align:center;
+    }
+    button {
+      padding:16px 40px; font-size:22px; background:#00ff9d; color:black;
+      border:none; border-radius:50px; cursor:pointer; margin-top:20px;
+      font-weight:bold; transition:0.3s; box-shadow:0 0 20px rgba(0,255,153,0.7);
+    }
+    button:hover { transform:scale(1.1); background:#00cc7a; }
+    canvas { position:absolute; top:0; left:0; z-index:-1; }
+    footer { margin-top:30px; font-size:14px; opacity:0.8; }
   </style>
 </head>
 <body>
-  <h1>Hello from GitHub! ❄️</h1>
-  <p>This website is 100% hosted on GitHub Pages</p>
-  <canvas id="snow"></canvas>
+
+<canvas id="snow"></canvas>
+
+<div class="card">
+  <h1>❄️ Follow Me on Roblox! ❄️</h1>
+  <p>Click the button below and hit Follow — I follow back!</p>
+
+  <input type="text" id="newUser" placeholder="Add your Roblox username here" />
+  <button onclick="addAccount()">➕ Add Account</button>
+
+  <div class="accounts" id="accountList">
+    <!-- Your accounts will appear here -->
+  </div>
+
+  <button onclick="followMe()">
+    🚀 OPEN MY PROFILE & FOLLOW 🚀
+  </button>
+
+  <footer>Made with love • 100% safe • No bots</footer>
+</div>
 
 <script>
-// Simple snow
-const c = document.getElementById('snow');
-c.width = window.innerWidth; c.height = window.innerHeight;
-const ctx = c.getContext('2d');
-let snow = [];
-for(let i=0;i<200;i++){
-  snow.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*3+1,s:Math.random()*1+0.5});
-}
-function fall(){
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.fillStyle="white";
-  snow.forEach(p=>{
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
-    p.y += p.s;
-    if(p.y > c.height) p.y = 0;
-    p.x += Math.random()*2-1;
-  });
-  requestAnimationFrame(fall);
-}
-fall();
+  // ==== CHANGE THIS TO YOUR MAIN ROBLOX USERNAME ====
+  const MY_ROBLOX_USERNAME = "zprnxz";   // <<<<< PUT YOUR NAME HERE
+
+  // Load saved accounts from localStorage
+  let accounts = JSON.parse(localStorage.getItem("robloxAccounts")) || [];
+
+  function renderAccounts() {
+    const list = document.getElementById("accountList");
+    if (accounts.length === 0) {
+      list.innerHTML = "<i>No accounts added yet...</i>";
+      return;
+    }
+    list.innerHTML = accounts.map(name => 
+      `<span class="account-tag">@${name}</span>`
+    ).join("");
+  }
+
+  function addAccount() {
+    const input = document.getElementById("newUser");
+    const name = input.value.trim();
+    if (name && !accounts.includes(name)) {
+      accounts.push(name);
+      localStorage.setItem("robloxAccounts", JSON.stringify(accounts));
+      renderAccounts();
+    }
+    input.value = "";
+  }
+
+  function followMe() {
+    const url = `https://www.roblox.com/users/profile?username=${MY_ROBLOX_USERNAME}`;
+    window.open(url, "_blank");
+  }
+
+  // Snow animation
+  const canvas = document.getElementById("snow");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const snowflakes = [];
+
+  for(let i = 0; i < 200; i++) {
+    snowflakes.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 4 + 1,
+      speed: Math.random() * 2 + 1
+    });
+  }
+
+  function drawSnow() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.beginPath();
+    snowflakes.forEach(s => {
+      ctx.moveTo(s.x, s.y);
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      s.y += s.speed;
+      if (s.y > canvas.height) s.y = 0;
+      s.x += Math.random() * 2 - 1;
+    });
+    ctx.fill();
+    requestAnimationFrame(drawSnow);
+  }
+  drawSnow();
+
+  // First load
+  renderAccounts();
 </script>
 </body>
 </html>

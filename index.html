@@ -3,31 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CCertified's Tool</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <title>CCertified Tool</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Rajdhani:wght@600&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0; padding: 0; background: #000; color: #fff;
-      height: 100vh; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; overflow: hidden;
-      font-family: 'Rajdhani', sans-serif;
+      background:#000; color:#fff; min-height:100vh;
+      display:flex; flex-direction:column; justify-content:center;
+      align-items:center; text-align:center; font-family:'Rajdhani',sans-serif;
+      overflow:hidden;
     }
-    .loader-container {
-      text-align: center;
+    h1 { font-family:'Orbitron',monospace; font-size:9vw; background:linear-gradient(90deg,#ff0050,#00f2ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .bar { width:85vw; max-width:500px; height:14px; background:#111; border-radius:10px; overflow:hidden; margin:20px 0; border:2px solid #333; }
+    #fill { height:100%; width:0%; background:linear-gradient(90deg,#ff0050,#00f2ff); transition:width 0.4s ease; }
+    .status { font-size:5vw; opacity:0.9; margin:10px 0; }
+    button { margin:15px; padding:16px 32px; font-size:5.5vw; background:#111; color:#fff; border:2px solid #ff0050; border-radius:50px; }
+    button:active { background:#ff0050; transform:scale(0.95); }
+    #result { font-size:10vw; margin-top:30px; color:#00f2ff; font-weight:bold; }
+    .hide { display:none; }
+  </style>
+</head>
+<body>
+
+  <div id="loader">
+    <h1>LOADING TOOL #[<span id="perc">0</span>%]</h1>
+    <div class="bar"><div id="fill"></div></div>
+    <div class="status" id="msg">Initializing...</div>
+  </div>
+
+  <div id="main" class="hide">
+    <h1>CCERTIFIED'S TOOL</h1>
+    <button onclick="gen(1)">Short (3-4 chars)</button>
+    <button onclick="gen(2)">Aesthetic</button>
+    <button onclick="gen(3)">Both 🔥</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const perc = document.getElementById('perc');
+    const fill = document.getElementById('fill');
+    const msg = document.getElementById('msg');
+    const steps = ["Initializing...","Decrypting...","Spawning matrix...","Injecting vibes...","ct spins 🌀🌀🌀","Tool ready ✔"];
+    let i = 0, p = 0;
+
+    const loading = setInterval(()=>{
+      p += Math.floor(Math.random()*18)+5;
+      if(p>100) p=100;
+      perc.textContent = p;
+      fill.style.width = p+'%';
+      if(p>=20 && i<steps.length-1) msg.textContent = steps[++i];
+      if(p>=100){
+        clearInterval(loading);
+        setTimeout(()=>{ document.getElementById('loader').classList.add('hide'); document.getElementById('main').classList.remove('hide'); },1200);
+      }
+    },180);
+
+    const words = ["angel","bliss","chaos","crybaby","dreamy","eternal","faded","ghost","heartbreak","lunar","midnight","moonlit","nostalgia","phantom","reminiscing","savage","serene","shadow","stargirl","toxic","velvet","vibes","wanderer","zenith","aurora","cosmic","luv","oracle","phoenix","siren","twilight","vortex","whisper"];
+
+    function r(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+    function gen(type){
+      let res = "";
+      if(type===1 || type===3){
+        let len = Math.random()>0.5?3:4;
+        for(let j=0;j<len;j++) res += "abcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random()*36)];
+      }
+      if(type===2 || type===3){
+        let w = r(words);
+        if(Math.random()<0.4) w += r(words);
+        if(Math.random()<0.3) w += Math.floor(Math.random()*99);
+        if(Math.random()<0.2) w = "x"+w;
+        res += (type===3?"<br>":"")+w;
+      }
+      document.getElementById('result').innerHTML = res;
     }
-    #progress-text {
-      font-family: 'Orbitron', monospace;
-      font-size: 4vw; letter-spacing: 4px; margin-bottom: 20px;
-      background: linear-gradient(90deg, #ff0050, #00f2ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .bar {
-      width: 60vw; max-width: 600px; height: 12px;
-      background: #111; border-radius: 10px; overflow: hidden;
-      border: 2px solid #333;
-    }
-    #progress {
-      width: 0%; height: 100%; background: linear-gradient(90deg, #ff0050, #00f2ff);
-      transition: width 0.3s ease;
-    }
-    .
+  </script>
+</body>
+</html>
